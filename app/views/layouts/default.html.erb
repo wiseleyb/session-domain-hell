@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+
+
+	<body>
+		<p>Domain: <%=request.domain %> | 	
+			Host: <%=request.host%> | 
+			Session ID: <%=request.env["rack.session"][:session_id]%> |
+			<%=session[:login]%> - <a href="/default/login">Login</a> - <a href="/default/logout">Logout</a>
+		</p>
+		<hr>
+
+		<%=yield%>
+
+		<hr>
+
+		<p>To play around with this add this to your /etc/hosts file (on a mac)</p>
+		<pre>
+			127.0.0.1                               domain-testing.com
+			127.0.0.1                               test.domain-testing.com
+			127.0.0.1                               domain-testing-alt.com
+		</pre>
+		<p>Then flush your cache: sudo dscacheutil -flushcache  (or, on 10.4 sudo lookupd -flushcache)</p>
+		
+		<p>Once working properly domain-testing.com and test.domain-testing.com should share their 
+			session.  domain-testing-alt.com should have it's own session.</p>
+		
+		<p>I've been able to get 1 or the other work - I can get all three urls to have their own sessions or I can get domain-testing.com
+			and test.domain-testing.com to share a session but domain-testing-alt.com's session resets every page load.</p>
+				
+		<hr>
+		<h3>Request Dump</h3>
+		<%=request.inspect.gsub(", ", ",<br/>")%>
+	</body>
+</html>

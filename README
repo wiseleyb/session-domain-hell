@@ -1,0 +1,43 @@
+== Session Hell
+
+If anyone has a clue on how to do this I'd be very grateful.
+
+Within one Rails app I want to have:
+* domain-testing.com and test.domain-testing.com share a session
+* domain-testing-alt.com to have it's own session
+
+So far I can get 
+* all three urls to have their own session (comment/uncomment line 42 in environment.rb)
+OR
+* domain-testing.com and test.domain-testing.com share a session but domain-testing-alt.com doesn't hold it's session between page loads
+
+I thing I just need to be able to set something like 
+
+config.action_controller.session = {:domain => ".domain-testing.com"}
+
+in a before_filter in application_controller.  I haven't been able to figure this out yet.
+
+It seems like, looking at ActionController::Session::CookieStore that, once initialized the objects are frozen.
+
+This is on Rails 2.3.3 on Ruby 1.8.7 
+
+Anyone have any ideas?
+
+To get some play code just do a 
+git clone git@github.com:wiseleyb/session-domain-hell.git
+
+Add this to your /etc/hosts file:
+
+127.0.0.1                               domain-testing.com
+127.0.0.1                               test.domain-testing.com
+127.0.0.1                               domain-testing-alt.com
+
+Flush your cache: sudo dscacheutil -flushcache  (or, on 10.4 sudo lookupd -flushcache)
+
+Fire it up (script/server)
+
+Look at the header on the pages domain-testing.com:3000, test.domain-testing.com, domain-testing-alt.com
+
+Clicking Login - just sets a name that appears in the header and is stored in a session.  Logging out clears that.
+
+Ideally domain-testing.com and test.domain-testing.com share a session.  domain-testing-alt.com has it's own session.
